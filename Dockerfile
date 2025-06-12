@@ -28,10 +28,20 @@ RUN set -eux && \
         ca-certificates wget gnupg dirmngr \
         libaio1 libssl1.1 lsb-release procps tzdata && \
     groupadd -r mysql && useradd -r -g mysql mysql && \
-    mkdir -p "$MYSQL_DATADIR" /var/run/mysqld /etc/mysql/conf.d/ /etc/mysql/mysql.conf.d/ /docker-entrypoint-initdb.d && \
-    chown -R mysql:mysql "$MYSQL_DATADIR" /var/run/mysqld /etc/mysql/conf.d/ /etc/mysql/mysql.conf.d/ /docker-entrypoint-initdb.d && \
+    mkdir -p "$MYSQL_DATADIR" \
+        /var/run/mysqld \
+        /etc/mysql/conf.d \
+        /etc/mysql/mysql.conf.d \
+        /var/lib/mysql-files \
+        /docker-entrypoint-initdb.d && \
+    chown -R mysql:mysql "$MYSQL_DATADIR" \
+        /var/run/mysqld \
+        /etc/mysql/conf.d \
+        /etc/mysql/mysql.conf.d \
+        /var/lib/mysql-files \
+        /docker-entrypoint-initdb.d && \
     chmod +x /usr/local/bin/gosu && gosu nobody true && \
-    dpkg -i /tmp/mysql-arm_5.7.44-1_arm64-slim.deb || apt-get -f install -y && dpkg -i /tmp/mysql-arm_5.7.44-1_arm64-slim.deb && \
+    apt-get install -y --no-install-recommends ./tmp/mysql-arm_5.7.44-1_arm64-slim.deb && \
     rm -rf \
       /usr/local/mysql/mysql-test \
       /usr/local/mysql/support-files \
